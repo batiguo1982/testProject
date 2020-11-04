@@ -1,0 +1,366 @@
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>test_eChartGantt</title>
+ </head>
+ <body>
+    <div id="main" style="width: 80%; height: 60%;" ></div>
+    <div id="bpmn" style="display: none;width: 30%; height: 30%;border: orangered solid;"></div>
+
+    <script src="Factory_EK/js/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.js"></script>
+    <script>
+            let eleBpmn = document.getElementById("bpmn");
+            let ele = document.getElementById('main')
+            var myCharts = echarts.init(ele);
+            var seriesInfoGlobal = undefined;
+            var ifShowBpmnGlobal=0;
+var option = {
+    title: {
+        text: '设备进度表',
+        left: 10
+    },
+    legend: {
+        y: 'bottom',
+        data: ['已完成时间', '未完成（警告）','未开始（警告）','未开始（正常）','进行中']  //修改的地方1
+ 
+    },
+    grid: {
+        containLabel: true,
+        left: 20
+    },
+    xAxis: {
+        position: "top",
+        type: 'time'
+    },
+ 
+    yAxis: {
+        inverse:"true",
+        data: ['编号一', '编号二', '编号三', '编号四', '编号五', '编号六', '编号七']
+ 
+    },
+    tooltip: {
+        trigger: 'axis',
+        formatter: function(params) {
+            console.log("params is:"+params);
+           // console.log("params length is:"+params.length);
+            console.log(params[0]);
+            console.log(params[1]);
+            console.log("params 2 is"+params[2]);
+            console.log("params 3 is"+params[3]);
+
+            seriesInfoGlobal = params;
+            var res =  params[0].name + "</br>";
+
+            for (let i =0; i<params.length;i=i+2 ) {
+                console.log(i);
+                console.log(params[i].data.valueOf());
+                console.log(params[i+1].data.valueOf());
+                if ( params[i].data.valueOf() != params[i+1].data.valueOf()) {
+                    let date0 = params[i].data;
+                    let date1 = params[i+1].data;
+                    date0 = date0.getFullYear() + "-" + (date0.getMonth() + 1) + "-" + date0.getDate();
+                    date1 = date1.getFullYear() + "-" + (date1.getMonth() + 1) + "-" + date1.getDate();
+                               
+                    res +=params[i].seriesName + " ~ " + params[i+1].seriesName +":</br>" +date0 + " ~ " + date1 + "</br>";
+                }
+
+            };
+            
+            /*
+            var date0 = params[0].data;
+            var date1 = params[1].data;
+            var date2 = params[2].data;
+            var date3 = params[3].data;
+            date0 = date0.getFullYear() + "-" + (date0.getMonth() + 1) + "-" + date0.getDate();
+            date1 = date1.getFullYear() + "-" + (date1.getMonth() + 1) + "-" + date1.getDate();
+            date2 = date2.getFullYear() + "-" + (date2.getMonth() + 1) + "-" + date2.getDate();
+            date3 = date3.getFullYear() + "-" + (date3.getMonth() + 1) + "-" + date3.getDate();
+            res += params[0].seriesName + "~" + params[1].seriesName + ":</br>" + date0 + "~" + date1 + "</br>"
+            res += params[2].seriesName + "~" + params[3].seriesName + ":</br>" + date2 + "~" + date3 + "</br>"
+            */
+            return res;
+        } 
+    },
+    series: [
+ 
+        {
+            name: '已完成开始时间',
+            type: 'bar',
+            stack: 'test1',
+            itemStyle: {
+                normal: {
+                    color: 'rgba(0,0,0,0)'
+                }
+            },
+            data: [
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/10/01"),
+                new Date("2020/09/02")
+            ]
+        },
+        {
+            name: '已完成时间',
+            type: 'bar',
+            stack: 'test1',
+            //修改地方2
+            itemStyle: {
+                normal: {
+                    color: 'RGB(76,187,122)'
+                }
+            },
+            tooltip: {
+                formatter:function(params){
+                    console.log("已完成tooltip："+params);
+                    console.log("已完成tooltip detial:"+params[0]);
+                }            
+            },
+
+            //label:{
+             //   show:true
+               // formatter:function(params){
+               //     console.log(params[0]);
+                //    return params[0].name
+               // }
+            //},
+            data: [
+                new Date("2020/09/12"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/10/15"),
+                new Date("2020/09/02")
+            ]
+        },
+        {
+            name: '未完成（警告）开始时间',
+            type: 'bar',
+            stack: 'test1',
+            itemStyle: {
+                normal: {
+                    color: 'rgba(0,0,0,0)'
+                }
+            },
+            data: [
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02")
+            ]
+        }, 
+        {
+            name: '未完成（警告）',
+            type: 'bar',
+            stack: 'test1',
+            //修改地方3
+            itemStyle: {
+                normal: {
+                    color: 'RGB(237,39,36)'
+                }
+            },
+            data: [
+                new Date("2020/09/02"),
+                new Date("2020/09/10"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02")
+            ]
+        },
+        {
+            name: '未开始（警告）开始时间',
+            type: 'bar',
+            stack: 'test1',
+            itemStyle: {
+                normal: {
+                    color: 'rgba(0,0,0,0)'
+                }
+            },
+            data: [
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/12"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02")
+            ]
+        }, 
+        {
+            name: '未开始（警告）',
+            type: 'bar',
+            stack: 'test1',
+            //修改地方3
+            itemStyle: {
+                normal: {
+                    color: 'RGB(239,234,61)'
+                }
+            },
+            data: [
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/10/15"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02")
+            ]
+        },
+        {
+            name: '未开始（正常）开始时间',
+            type: 'bar',
+            stack: 'test1',
+            itemStyle: {
+                normal: {
+                    color: 'rgba(0,0,0,0)'
+                }
+            },
+            data: [
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/10/01"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02")
+            ]
+        }, 
+        {
+            name: '未开始（正常）',
+            type: 'bar',
+            stack: 'test1',
+            //修改地方3
+            itemStyle: {
+                normal: {
+                    color: 'RGB(178,178,178)'
+                }
+            },
+            data: [
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/10/20"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02")
+            ]
+        },
+        {
+            name: '进行中开始时间',
+            type: 'bar',
+            stack: 'test1',
+            itemStyle: {
+                normal: {
+                    color: 'rgba(0,0,0,0)'
+                }
+            },
+            data: [
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/12"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/22")
+            ]
+        }, 
+        {
+            name: '进行中',
+            type: 'bar',
+            stack: 'test1',
+            //修改地方3
+            itemStyle: {
+                normal: {
+                    color: 'RGB(162,224,104)'
+                }
+            },
+            data: [
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/10/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/10/10")
+            ]
+        },
+        {
+            name: '进行中待完成开始时间',
+            type: 'bar',
+            stack: 'test1',
+            itemStyle: {
+                normal: {
+                    color: 'rgba(0,0,0,0)'
+                }
+            },
+            data: [
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/10/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/10/10")
+            ]
+        }, 
+        {
+            name: '进行中待完成',
+            type: 'bar',
+            stack: 'test1',
+            //修改地方3
+            itemStyle: {
+                normal: {
+                    color: 'RGB(178,178,178)'
+                }
+            },
+            data: [
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/10/15"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/09/02"),
+                new Date("2020/10/17")
+            ]
+        },
+    ]
+};
+myCharts.setOption(option);
+myCharts.on("click",function(params){
+    console.log("click is"+params[0]);
+    //let shwoName=seriesInfoGlobal[0].name;
+    
+    if(ifShowBpmnGlobal==0 ) {
+        ifShowBpmnGlobal++;
+        eleBpmn.style.display = "block";
+        eleBpmn.style.name=seriesInfoGlobal[0].name;
+        eleBpmn.innerHTML=`<p> ${eleBpmn.style.name}<p>`;
+        console.log("showname is:"+seriesInfoGlobal[0].name);
+    } else if (ifShowBpmnGlobal ==1) {
+        if ( eleBpmn.style.name == seriesInfoGlobal[0].name ) {
+            eleBpmn.style.display = "none";
+            eleBpmn.style.name="";
+            ifShowBpmnGlobal = 0;
+        } else {
+            eleBpmn.style.name=seriesInfoGlobal[0].name;
+            eleBpmn.innerHTML=`<p> ${eleBpmn.style.name}<p>`;
+            console.log("showname is:"+seriesInfoGlobal[0].name);
+        }
+    };
+
+    
+
+})
+    </script> 
+ </body>
+ </html>
